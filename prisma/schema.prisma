@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Tenant {
+  id              String   @id @default(cuid())
+  nomeFantasia    String
+  razaoSocial     String
+  cnpj            String   @unique
+  email           String
+  telefone        String
+  endereco        String?
+  cidade          String?
+  uf              String?
+  cep             String?
+  site            String?
+  instagram       String?
+  facebook        String?
+  logoUrl         String?
+  corPrimaria     String   @default("#1e40af")
+  corSecundaria   String   @default("#dbeafe")
+  faviconUrl      String?
+  capaConviteUrl  String?
+  subdominio      String?  @unique
+  lgpdTexto       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  users   User[]
+  eventos Evento[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String
+  senha     String
+  role      String   @default("CONSULTOR")
+  ativo     Boolean  @default(true)
+  tenantId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  eventos  Evento[]  @relation("EventoConsultor")
+  checkins CheckIn[]
+
+  @@unique([email, tenantId])
+}
+
+model Evento {
+  id                  String   @id @default(cuid())
+  nome                String
+  nomeAniversariante  String
+  idadeAniversariante Int?
+  dataEvento          DateTime
+  horarioInicio       String
+  horarioFim          String
+  descricao           String?
+  capacidade          Int?
+  status              String   @default("ATIVO")
+  tenantId            String
+  consultorId         String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  tenant     Tenant      @relation(fields: [tenantId], references: [id])
+  consultor  User        @relation("EventoConsultor", fields: [consultorId], references: [id])
+  convidados Convidado[]
+}
+
+model Convidado {
+  id                 String   @id @default(cuid())
+  nomeResponsavel    String
+  whatsapp           String
+  email              String
+  qtdPulantes        Int      @default(1)
+  nomeAniversariante String
+  dataNascimento     String
+  aceiteLgpd         Boolean  @default(false)
+  eventoId           String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  evento Evento  @relation(fields: [eventoId], references: [id])
+  qrCode QRCode?
+}
+
+model QRCode {
+  id          String    @id @default(cuid())
+  codigo      String    @unique
+  status      String    @default("PENDENTE")
+  convidadoId String    @unique
+  expiradoEm  DateTime?
+  createdAt   DateTime  @default(now())
+
+  convidado Convidado @relation(fields: [convidadoId], references: [id])
+  checkin   CheckIn?
+}
+
+model CheckIn {
+  id         String   @id @default(cuid())
+  qrCodeId   String   @unique
+  operadorId String
+  horario    DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  qrCode   QRCode @relation(fields: [qrCodeId], references: [id])
+  operador User   @relation(fields: [operadorId], references: [id])
+}
