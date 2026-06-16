@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   const user = session!.user as any;
   const tenantId = user.tenantId;
 
-  const [totalConvidados, totalEventos, totalCheckins, proximosEventos, eventosPorStatus] =
+  const [totalConvidados, totalEventos, totalCheckins, proximosEventos, eventosPorStatus, totalQrCodes] =
     await Promise.all([
       prisma.convidado.count({ where: { evento: { tenantId } } }),
       prisma.evento.count({ where: { tenantId } }),
@@ -30,11 +30,10 @@ export default async function DashboardPage() {
         where: { tenantId },
         _count: true,
       }),
+      prisma.qRCode.count({
+        where: { convidado: { evento: { tenantId } } },
+      }),
     ]);
-
-  const totalQrCodes = await prisma.qRCode.count({
-    where: { convidado: { evento: { tenantId } } },
-  });
 
   const taxaComparecimento = totalQrCodes > 0
     ? Math.round((totalCheckins / totalQrCodes) * 100)

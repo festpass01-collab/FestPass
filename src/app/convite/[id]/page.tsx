@@ -4,6 +4,26 @@ import { notFound } from "next/navigation";
 import { Calendar, Clock, MapPin, PartyPopper } from "lucide-react";
 import ConviteForm from "./ConviteForm";
 
+// Simple function to darken a hex color by 10%
+const darkenColor = (hex: string, percent: number) => {
+  let num = parseInt(hex.replace("#", ""), 16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) - amt,
+    G = ((num >> 8) & 0x00ff) - amt,
+    B = (num & 0x0000ff) - amt;
+  return (
+    "#" +
+    (
+      0x1000000 +
+      (R < 0 ? 0 : R > 255 ? 255 : R) * 0x10000 +
+      (G < 0 ? 0 : G > 255 ? 255 : G) * 0x100 +
+      (B < 0 ? 0 : B > 255 ? 255 : B)
+    )
+      .toString(16)
+      .slice(1)
+  );
+};
+
 export default async function ConvitePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
@@ -19,12 +39,26 @@ export default async function ConvitePage({ params }: { params: Promise<{ id: st
   const lotado = evento.capacidade ? totalConfirmados >= evento.capacidade : false;
   const encerrado = evento.status !== "ATIVO";
 
+  const primaryColor = tenant.corPrimaria || "#7c3aed";
+  const secondaryColor = tenant.corSecundaria || "#ede9fe";
+  const primaryHoverColor = darkenColor(primaryColor, 10);
+
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
       style={{ background: `linear-gradient(135deg, ${tenant.corPrimaria}15, ${tenant.corSecundaria}40)` }}
     >
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          :root {
+            --brand-primary: ${primaryColor};
+            --brand-secondary: ${secondaryColor};
+            --brand-primary-hover: ${primaryHoverColor};
+          }
+        `
+      }} />
       <div className="w-full max-w-md">
+
         {/* Cabeçalho com identidade visual */}
         <div
           className="rounded-t-2xl p-6 text-white text-center"

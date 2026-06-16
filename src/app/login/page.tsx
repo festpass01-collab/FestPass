@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PartyPopper, Eye, EyeOff, CheckCircle } from "lucide-react";
+import { PartyPopper, Eye, EyeOff, CheckCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Link from "next/link";
@@ -18,6 +18,29 @@ function LoginForm() {
   const [showSenha, setShowSenha] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cacheLimpo, setCacheLimpo] = useState(false);
+
+  function handleLimparCache() {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Limpa os cookies
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      setCacheLimpo(true);
+      setTimeout(() => {
+        setCacheLimpo(false);
+        window.location.reload();
+      }, 1000);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -123,16 +146,31 @@ function LoginForm() {
           </div>
         </div>
 
-        {/* Demo hint */}
-        <div className="mt-4 p-4 bg-violet-50 rounded-xl border border-violet-100">
-          <p className="text-xs font-semibold text-violet-700 mb-2">Credenciais de demonstração:</p>
-          <div className="space-y-1 text-xs text-violet-600">
-            <p><strong>ADM:</strong> adm@alegriaKids.com.br</p>
-            <p><strong>Gerente:</strong> gerente@alegriaKids.com.br</p>
-            <p><strong>Consultor:</strong> consultor@alegriaKids.com.br</p>
-            <p><strong>Operador:</strong> operador@alegriaKids.com.br</p>
-            <p className="mt-1 font-medium">Senha: festpass123</p>
-          </div>
+        {/* Botão Limpar Cache */}
+        <div className="mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleLimparCache}
+            className={`w-full flex items-center justify-center gap-2 border transition-all shadow-sm ${
+              cacheLimpo
+                ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                : "bg-white border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            {cacheLimpo ? (
+              <>
+                <CheckCircle className="w-4 h-4 text-emerald-600 animate-bounce" />
+                Cache limpo com sucesso!
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-4 h-4 text-gray-400" />
+                Limpar cache
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>

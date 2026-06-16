@@ -1,8 +1,25 @@
 @import "tailwindcss";
 
+@theme {
+  --color-violet-50: var(--brand-secondary);
+  --color-violet-100: var(--brand-secondary);
+  --color-violet-200: var(--brand-secondary);
+  --color-violet-300: var(--brand-secondary);
+  --color-violet-400: var(--brand-secondary);
+  --color-violet-500: var(--brand-primary);
+  --color-violet-600: var(--brand-primary);
+  --color-violet-700: var(--brand-primary-hover);
+  --color-violet-800: var(--brand-primary-hover);
+  --color-violet-900: var(--brand-primary-hover);
+  --color-violet-950: var(--brand-primary-hover);
+}
+
 :root {
   --background: #f9fafb;
   --foreground: #111827;
+  --brand-primary: #7c3aed;
+  --brand-secondary: #ede9fe;
+  --brand-primary-hover: #6d28d9;
 }
 
 body {

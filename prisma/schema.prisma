@@ -22,6 +22,7 @@ model Tenant {
   instagram       String?
   facebook        String?
   logoUrl         String?
+  logoStyle       String   @default("TRANSPARENT")
   corPrimaria     String   @default("#1e40af")
   corSecundaria   String   @default("#dbeafe")
   faviconUrl      String?
@@ -51,6 +52,7 @@ model User {
   checkins CheckIn[]
 
   @@unique([email, tenantId])
+  @@index([tenantId])
 }
 
 model Evento {
@@ -72,6 +74,9 @@ model Evento {
   tenant     Tenant      @relation(fields: [tenantId], references: [id])
   consultor  User        @relation("EventoConsultor", fields: [consultorId], references: [id])
   convidados Convidado[]
+
+  @@index([tenantId])
+  @@index([consultorId])
 }
 
 model Convidado {
@@ -89,6 +94,8 @@ model Convidado {
 
   evento Evento  @relation(fields: [eventoId], references: [id])
   qrCode QRCode?
+
+  @@index([eventoId])
 }
 
 model QRCode {
@@ -112,4 +119,6 @@ model CheckIn {
 
   qrCode   QRCode @relation(fields: [qrCodeId], references: [id])
   operador User   @relation(fields: [operadorId], references: [id])
+
+  @@index([operadorId])
 }

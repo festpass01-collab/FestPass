@@ -29,10 +29,12 @@ const navItems: NavItem[] = [
 interface SidebarProps {
   role: string;
   tenantNome: string;
+  tenantLogo?: string | null;
+  tenantLogoStyle?: string | null;
   userName: string;
 }
 
-export function Sidebar({ role, tenantNome, userName }: SidebarProps) {
+export function Sidebar({ role, tenantNome, tenantLogo, tenantLogoStyle, userName }: SidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -43,16 +45,35 @@ export function Sidebar({ role, tenantNome, userName }: SidebarProps) {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-violet-700/30">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-            <PartyPopper className="w-4 h-4 text-white" />
+      <div className="px-6 py-5 border-b border-white/10">
+        {tenantLogo ? (
+          <div className="w-full flex flex-col items-center gap-2">
+            {tenantLogoStyle === "CARD" ? (
+              <div className="h-16 w-16 bg-white rounded-xl shadow-sm p-2 flex items-center justify-center overflow-hidden">
+                <img src={tenantLogo} alt="Logo" className="max-h-full max-w-full object-contain" />
+              </div>
+            ) : tenantLogoStyle === "INVERTED" ? (
+              <div className="h-16 w-full flex items-center justify-center overflow-hidden">
+                <img src={tenantLogo} alt="Logo" className="max-h-full max-w-full object-contain filter brightness-0 invert" />
+              </div>
+            ) : (
+              <div className="h-16 w-full flex items-center justify-center overflow-hidden">
+                <img src={tenantLogo} alt="Logo" className="max-h-full max-w-full object-contain" />
+              </div>
+            )}
+            <p className="text-white font-semibold text-xs tracking-wider text-center uppercase truncate w-full mt-1">{tenantNome}</p>
           </div>
-          <div>
-            <p className="text-white font-bold text-sm leading-tight">FestPass</p>
-            <p className="text-violet-200 text-xs leading-tight truncate max-w-[140px]">{tenantNome}</p>
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+              <PartyPopper className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <p className="text-white font-bold text-sm leading-tight">FestPass</p>
+              <p className="text-violet-200 text-xs leading-tight truncate max-w-[140px]">{tenantNome}</p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Nav */}
@@ -104,7 +125,10 @@ export function Sidebar({ role, tenantNome, userName }: SidebarProps) {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden md:flex w-56 lg:w-60 flex-shrink-0 flex-col bg-violet-700 min-h-screen">
+      <aside
+        className="hidden md:flex w-56 lg:w-60 flex-shrink-0 flex-col bg-violet-700 min-h-screen transition-all duration-300"
+        style={{ backgroundColor: "var(--brand-primary)" }}
+      >
         <NavContent />
       </aside>
 
@@ -112,7 +136,8 @@ export function Sidebar({ role, tenantNome, userName }: SidebarProps) {
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="w-9 h-9 bg-violet-700 rounded-lg flex items-center justify-center text-white shadow-lg"
+          className="w-9 h-9 bg-violet-700 rounded-lg flex items-center justify-center text-white shadow-lg transition-all duration-300"
+          style={{ backgroundColor: "var(--brand-primary)" }}
         >
           {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
@@ -122,7 +147,10 @@ export function Sidebar({ role, tenantNome, userName }: SidebarProps) {
       {mobileOpen && (
         <>
           <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />
-          <aside className="md:hidden fixed left-0 top-0 bottom-0 w-60 bg-violet-700 z-50 flex flex-col">
+          <aside
+            className="md:hidden fixed left-0 top-0 bottom-0 w-60 bg-violet-700 z-50 flex flex-col transition-all duration-300"
+            style={{ backgroundColor: "var(--brand-primary)" }}
+          >
             <NavContent />
           </aside>
         </>
