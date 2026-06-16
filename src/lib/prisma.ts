@@ -1,10 +1,11 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
 function createPrismaClient() {
-  const fileUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
-  // libsql expects file:// (absolute) or file: (relative) — keep as-is
-  const adapter = new PrismaLibSql({ url: fileUrl });
+  const connectionString = process.env.DATABASE_URL;
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter } as any);
 }
 
