@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { ArrowLeft, Copy, Users, QrCode, CheckCircle2, Clock, Calendar, UserCircle } from "lucide-react";
 import Link from "next/link";
 import EventoActions from "./EventoActions";
+import { headers } from "next/headers";
 
 export default async function EventoDetalhePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,7 +34,11 @@ export default async function EventoDetalhePage({ params }: { params: Promise<{ 
     ? Math.round((totalCheckins / totalConvidados) * 100)
     : 0;
 
-  const linkConvite = `${process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/convite/${evento.id}`;
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
+  const linkConvite = `${baseUrl}/convite/${evento.id}`;
 
   const sb = statusEventoBadge(evento.status);
   const podeCriarConvidado = ["ADM", "GERENTE", "CONSULTOR"].includes(user.role);
