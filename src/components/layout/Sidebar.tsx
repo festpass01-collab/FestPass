@@ -19,11 +19,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/filiais", label: "Filiais", icon: Building2, roles: ["MASTER"] },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
   { href: "/convidados", label: "Convidados", icon: Users },
   { href: "/checkin", label: "Check-in", icon: QrCode },
   { href: "/usuarios", label: "Usuários", icon: UserCog, roles: ["MASTER", "ADM", "GERENTE"] },
+  { href: "/filiais", label: "Filiais", icon: Building2, roles: ["MASTER"] },
   { href: "/configuracoes", label: "Configurações", icon: Settings, roles: ["MASTER", "ADM"] },
 ];
 
