@@ -17,11 +17,14 @@ export async function POST(req: NextRequest) {
   const activeTenantId = await getActiveTenantId(user);
 
   const body = await req.json();
-  const { nome, email, senha, role } = body;
+  const { nome, email, senha, role, targetTenantId } = body;
 
   if (!nome || !email || !senha || !role) {
     return NextResponse.json({ error: "Campos obrigatórios ausentes" }, { status: 400 });
   }
+
+  // Se for MASTER e enviou um targetTenantId, usar ele, senão usar o ativo
+  const finalTenantId = (user.role === "MASTER" && targetTenantId) ? targetTenantId : activeTenantId;
 
   if (senha.length < 6) {
     return NextResponse.json({ error: "Senha deve ter no mínimo 6 caracteres" }, { status: 400 });
@@ -36,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   const existe = await prisma.user.findFirst({
-    where: { email, tenantId: activeTenantId },
+    where: { email, tenantId: finalTenantId },
   });
   if (existe) {
     return NextResponse.json({ error: "E-mail já cadastrado neste estabelecimento" }, { status: 409 });
@@ -50,7 +53,7 @@ export async function POST(req: NextRequest) {
       email,
       senha: senhaHash,
       role,
-      tenantId: activeTenantId,
+      tenantId: finalTenantId,
     },
   });
 
