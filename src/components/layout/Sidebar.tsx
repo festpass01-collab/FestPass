@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, CalendarDays, Users, QrCode, Settings,
-  UserCog, LogOut, PartyPopper, ChevronRight, Menu, X
+  UserCog, LogOut, PartyPopper, ChevronRight, Menu, X, Building2
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -19,11 +19,12 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/filiais", label: "Filiais", icon: Building2, roles: ["MASTER"] },
   { href: "/eventos", label: "Eventos", icon: CalendarDays },
   { href: "/convidados", label: "Convidados", icon: Users },
   { href: "/checkin", label: "Check-in", icon: QrCode },
-  { href: "/usuarios", label: "Usuários", icon: UserCog, roles: ["ADM", "GERENTE"] },
-  { href: "/configuracoes", label: "Configurações", icon: Settings, roles: ["ADM"] },
+  { href: "/usuarios", label: "Usuários", icon: UserCog, roles: ["MASTER", "ADM", "GERENTE"] },
+  { href: "/configuracoes", label: "Configurações", icon: Settings, roles: ["MASTER", "ADM"] },
 ];
 
 import { TenantSwitcher } from "./TenantSwitcher";
