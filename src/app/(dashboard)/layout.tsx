@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const user = session.user as any;
 
   const tenant = await prisma.tenant.findUnique({
-    where: { id: user.tenantId },
+    where: { id: user.tenantId || "undefined" },
   });
 
   if (!tenant) redirect("/login");

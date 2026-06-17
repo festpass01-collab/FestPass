@@ -8,8 +8,12 @@ import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await auth();
-  const user = session!.user as any;
+  if (!session?.user) return null;
+  
+  const user = session.user as any;
   const tenantId = user.tenantId;
+  
+  if (!tenantId) return null;
 
   const [totalConvidados, totalEventos, totalCheckins, proximosEventos, eventosPorStatus, totalQrCodes] =
     await Promise.all([

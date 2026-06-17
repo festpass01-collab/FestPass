@@ -13,9 +13,6 @@ export const proxy = auth((req) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (isLoggedIn && pathname === "/login") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
 
   return NextResponse.next();
 });
