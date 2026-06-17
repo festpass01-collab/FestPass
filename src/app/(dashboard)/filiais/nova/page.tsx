@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ArrowLeft, Building2 } from "lucide-react";
 import Link from "next/link";
-import InputMask from "react-input-mask";
 
 export default function NovaFilialPage() {
   const router = useRouter();
@@ -93,40 +92,28 @@ export default function NovaFilialPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium text-gray-700">CNPJ <span className="text-red-500">*</span></label>
-                <InputMask
-                  mask="99.999.999/9999-99"
+                <input
+                  type="text"
+                  name="cnpj"
+                  required
+                  placeholder="00.000.000/0000-00"
                   value={form.cnpj}
                   onChange={handleChange}
-                >
-                  {(inputProps: any) => (
-                    <input
-                      {...inputProps}
-                      type="text"
-                      required
-                      placeholder="00.000.000/0000-00"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                    />
-                  )}
-                </InputMask>
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+                />
               </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium text-gray-700">Telefone / WhatsApp <span className="text-red-500">*</span></label>
-                <InputMask
-                  mask="(99) 99999-9999"
+                <input
+                  type="text"
+                  name="telefone"
+                  required
+                  placeholder="(00) 00000-0000"
                   value={form.telefone}
                   onChange={handleChange}
-                >
-                  {(inputProps: any) => (
-                    <input
-                      {...inputProps}
-                      type="text"
-                      required
-                      placeholder="(00) 00000-0000"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
-                    />
-                  )}
-                </InputMask>
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+                />
               </div>
             </div>
 
