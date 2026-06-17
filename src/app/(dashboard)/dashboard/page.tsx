@@ -6,12 +6,14 @@ import { Badge, statusEventoBadge } from "@/components/ui/Badge";
 import { Users, QrCode, CalendarDays, TrendingUp, CheckCircle2, Clock } from "lucide-react";
 import Link from "next/link";
 
+import { getActiveTenantId } from "@/lib/tenant";
+
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) return null;
   
   const user = session.user as any;
-  const tenantId = user.tenantId;
+  const tenantId = await getActiveTenantId(user);
   
   if (!tenantId) return null;
 

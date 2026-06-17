@@ -32,6 +32,10 @@ model Tenant {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  parentId        String?
+  parent          Tenant?  @relation("TenantHierarchy", fields: [parentId], references: [id])
+  filiais         Tenant[] @relation("TenantHierarchy")
+
   users   User[]
   eventos Evento[]
 }

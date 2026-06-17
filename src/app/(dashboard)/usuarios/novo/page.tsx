@@ -107,11 +107,16 @@ export default function NovoUsuarioPage() {
                 required
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:border-violet-500 focus:ring-2 focus:ring-violet-200 bg-white"
               >
+                {/* As permissões de quem pode criar quem são validadas na API, mas podemos mostrar opções avançadas */}
+                <option value="MASTER">Master (Acesso a todas as filiais)</option>
+                <option value="ADM">Administrador da Filial</option>
                 <option value="GERENTE">Gerente</option>
                 <option value="CONSULTOR">Consultor/Vendedor</option>
                 <option value="OPERADOR">Operador (Check-in)</option>
               </select>
               <p className="text-xs text-gray-500">
+                {form.role === "MASTER" && "Acesso total à matriz e todas as filiais"}
+                {form.role === "ADM" && "Administrador local desta filial/matriz"}
                 {form.role === "GERENTE" && "Acesso a dashboards, relatórios e gestão de usuários"}
                 {form.role === "CONSULTOR" && "Criação de eventos, convites e gestão de convidados"}
                 {form.role === "OPERADOR" && "Apenas leitura de QR Codes no check-in"}

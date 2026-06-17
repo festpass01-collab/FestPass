@@ -9,18 +9,22 @@ import { UserCog, Plus, UserCheck, UserX } from "lucide-react";
 import Link from "next/link";
 import UsuarioActions from "./UsuarioActions";
 
+import { getActiveTenantId } from "@/lib/tenant";
+
 export default async function UsuariosPage() {
   const session = await auth();
   const user = session!.user as any;
 
-  if (!["ADM", "GERENTE"].includes(user.role)) redirect("/dashboard");
+  if (!["MASTER", "ADM", "GERENTE"].includes(user.role)) redirect("/dashboard");
+  
+  const tenantId = await getActiveTenantId(user);
 
   const usuarios = await prisma.user.findMany({
-    where: { tenantId: user.tenantId },
+    where: { tenantId },
     orderBy: [{ role: "asc" }, { nome: "asc" }],
   });
 
-  const podeGerenciarTodos = user.role === "ADM";
+  const podeGerenciarTodos = ["MASTER", "ADM"].includes(user.role);
 
   return (
     <div className="space-y-6">

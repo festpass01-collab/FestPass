@@ -3,14 +3,17 @@ import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { prisma } from "@/lib/prisma";
 
+import { getActiveTenantId } from "@/lib/tenant";
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
   const user = session.user as any;
+  const activeTenantId = await getActiveTenantId(user);
 
   const tenant = await prisma.tenant.findUnique({
-    where: { id: user.tenantId || "undefined" },
+    where: { id: activeTenantId || "undefined" },
   });
 
   if (!tenant) redirect("/login");
@@ -40,6 +43,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const primaryHoverColor = darkenColor(primaryColor, 10);
 
+  let filiais = [] as any[];
+  if (user.role === "MASTER") {
+    // Find the parent tenant (either the user's base tenant or its parent)
+    const baseTenant = await prisma.tenant.findUnique({ where: { id: user.tenantId } });
+    const parentIdToSearch = baseTenant?.parentId || baseTenant?.id;
+    
+    if (parentIdToSearch) {
+      // Get the parent and all its filiais
+      const parent = await prisma.tenant.findUnique({ where: { id: parentIdToSearch } });
+      const children = await prisma.tenant.findMany({ where: { parentId: parentIdToSearch } });
+      if (parent) {
+        filiais = [parent, ...children];
+      }
+    }
+  }
+
   return (
     <div className="flex min-h-screen">
       <style dangerouslySetInnerHTML={{
@@ -57,6 +76,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         tenantLogo={tenant.logoUrl}
         tenantLogoStyle={tenant.logoStyle}
         userName={user.name ?? "Usuário"}
+        filiais={filiais}
+        currentTenantId={activeTenantId}
       />
       <main className="flex-1 flex flex-col min-w-0 md:pl-0 pt-0">
         <div className="flex-1 p-4 md:p-6 lg:p-8">

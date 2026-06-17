@@ -26,15 +26,19 @@ const navItems: NavItem[] = [
   { href: "/configuracoes", label: "Configurações", icon: Settings, roles: ["ADM"] },
 ];
 
+import { TenantSwitcher } from "./TenantSwitcher";
+
 interface SidebarProps {
   role: string;
   tenantNome: string;
   tenantLogo?: string | null;
   tenantLogoStyle?: string | null;
   userName: string;
+  filiais?: any[];
+  currentTenantId?: string;
 }
 
-export function Sidebar({ role, tenantNome, tenantLogo, tenantLogoStyle, userName }: SidebarProps) {
+export function Sidebar({ role, tenantNome, tenantLogo, tenantLogoStyle, userName, filiais = [], currentTenantId = "" }: SidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -74,6 +78,10 @@ export function Sidebar({ role, tenantNome, tenantLogo, tenantLogoStyle, userNam
             </div>
           </div>
         )}
+      </div>
+
+      <div className="mt-4">
+        <TenantSwitcher isMaster={role === "MASTER"} filiais={filiais} currentTenantId={currentTenantId} />
       </div>
 
       {/* Nav */}
