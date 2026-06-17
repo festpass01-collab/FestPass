@@ -109,13 +109,13 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Criar Usuário ADM
+      // Criar Usuário ADM (Master da Matriz)
       const novoUser = await tx.user.create({
         data: {
           nome: adminNome,
           email: adminEmail.toLowerCase().trim(),
           senha: senhaHash,
-          role: "ADM",
+          role: "MASTER",
           tenantId: novoTenant.id,
           ativo: true,
         },
