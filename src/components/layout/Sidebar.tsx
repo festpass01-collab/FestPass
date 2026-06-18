@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import pkg from "../../../package.json";
 import {
   LayoutDashboard, CalendarDays, Users, QrCode, Settings,
   UserCog, LogOut, PartyPopper, ChevronRight, Menu, X, Building2
@@ -127,6 +128,11 @@ export function Sidebar({ role, tenantNome, tenantLogo, tenantLogoStyle, userNam
           <LogOut className="w-4 h-4" />
           Sair
         </button>
+        <div className="mt-3 flex justify-center">
+          <span className="text-[10px] font-medium text-violet-300/60 tracking-wider">
+            v{pkg.version}
+          </span>
+        </div>
       </div>
     </div>
   );
